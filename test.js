@@ -8,6 +8,7 @@ var usersRouter = require('./routes/users');
 var symbolRouter = require('./routes/symbolRoutes');
 const winston = require('winston');
 const expressWinston = require('express-winston');
+
 var app = express();
 
 // view engine setup
@@ -65,9 +66,7 @@ app.use(function(err, req, res, next) {
 app.get('/api/test', (req, res) => {
   res.json({'message': 'Hello winston!'});
 });
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Testing Express' });
-});
+
 
 const port = 3000;
 app.listen(port, () => {
