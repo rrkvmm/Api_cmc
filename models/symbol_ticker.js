@@ -7,16 +7,17 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   symbol_ticker.init({
-    trading_pairs                : DataTypes.STRING,
-    last_price                   :   DataTypes.DECIMAL,
+    trading_pairs                :    DataTypes.STRING,
+    last_price                   :    DataTypes.DECIMAL,
     lowest_ask                   :    DataTypes.DECIMAL,
-    price_change_percent_24h     :   DataTypes.DECIMAL,
-    high:   DataTypes.DECIMAL,
-    buy:    DataTypes.DECIMAL,
-    sell:   DataTypes.DECIMAL,
-    time:   DataTypes.DECIMAL,
-    open:   DataTypes.DECIMAL,
-    status: DataTypes.INTEGER,
+    price_change_percent_24h     :    DataTypes.DECIMAL,
+    base_currency                :    DataTypes.STRING,
+    quote_currency               :    DataTypes.STRING,
+    base_volume                  :    DataTypes.DECIMAL,
+    highest_bid                  :    DataTypes.DECIMAL,
+    highest_price_24h            :    DataTypes.DECIMAL,
+    lowest_price_24h             :    DataTypes.DECIMAL,
+    status                       :    DataTypes.INTEGER,
   }, 
   {
     sequelize,

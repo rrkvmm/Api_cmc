@@ -1,21 +1,21 @@
 'use strict';
-
 module.exports = {
   async up (queryInterface, Sequelize) {
-    /**
-     * Add altering commands here.
-     *
-     * Example:
-     * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
-     */
+    return Promise.all([
+    queryInterface.removeColumn('symbol_tickers', 'high', { type: Sequelize.DECIMAL }),
+    queryInterface.removeColumn('symbol_tickers', 'buy', { type: Sequelize.DECIMAL }),
+    queryInterface.removeColumn('symbol_tickers', 'sell', { type: Sequelize.DECIMAL}),
+    queryInterface.removeColumn('symbol_tickers', 'open', { type: Sequelize.DECIMAL}),
+    ]);
   },
 
-  async down (queryInterface, Sequelize) {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
+  async down (queryInterface, Sequelize) 
+  {
+    return Promise.all([
+      queryInterface.removeColumn('symbol_tickers', 'high', { type: Sequelize.DECIMAL }),
+      queryInterface.removeColumn('symbol_tickers', 'buy', { type: Sequelize.DECIMAL }),
+      queryInterface.removeColumn('symbol_tickers', 'sell', { type: Sequelize.DECIMAL}),
+      queryInterface.removeColumn('symbol_tickers', 'open', { type: Sequelize.DECIMAL}),
+  ])
   }
-};
+  };

@@ -27,6 +27,9 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
+router.get('/', function(req, res, next) {
+  res.render('index', { title: 'App Express' });
+});
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
