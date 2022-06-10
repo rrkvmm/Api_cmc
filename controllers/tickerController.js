@@ -1,6 +1,5 @@
 const symbols = require('../models').symbols;
 const symbolTicker = require('../models').symbol_ticker;
-const symbol_ticker = require('../models').symbol_ticker;
 const Utility = require('../common/Utility');
 const commonapi = require('../common/common_api');
 const axios = require('axios');
@@ -11,27 +10,7 @@ const zlib = require('zlib');
 module.exports =
 {
      
-    async save_symbols(req, res) {
-        try {
-            var response = await Utility.Get_Request_By_Axios("https://openapi.lyotrade.com/sapi/v1/symbols",{})
-            let json_response = JSON.parse(response.data)
-            let symbols_response = await symbols.bulkCreate(json_response.data.symbols,{ 
-                updateOnDuplicate: ["symbol", "quantityPrecision", "pricePrecision", "baseAsset", "quoteAsset"],
-                
-            })
-            .then((response) =>
-            res.json({ status: 200, data:response, message: "Symbols Saved" })
-            )
-            .catch((error) => 
-            
-            res.json({ status: 400, data:{}, message:error.message })
-            )
-           
-        } catch (error) {
-            console.log("new_save_loan   catch 2",error)
-            res.json({ status: 400, data: {}, message: error.message })
-        }
-    },
+  
     async get_symbols(req, res) {
         try {
             var response = await Utility.Get_Request_By_Axios("https://openapi.lyotrade.com/sapi/v1/symbols",{})
