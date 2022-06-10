@@ -135,6 +135,26 @@ module.exports =
             res.send({ status: 400, data: {}, message: error.message })
         }
     },
+    async get_asset(req, res) {
+        try {
+            conn.pool.query('SELECT  json_object_agg(t1.symbol, (t1.* ))   FROM symbols t1', (error, results) => {
+                if (error) {
+                    console.log("error",error)
+                    // res.status(400).json("Data could not found")
+                    res.json({ status: 400, message: "Data could not found" ,data: {}})
+                }else{
+                    res.json({ status: 200, message: "Success" ,data: results.rows[0].json_object_agg})
+                    // res.status(200).json(results.rows[0].json_object_agg)
+                }
+               
+               
+              })
+          
+    } catch (error) {
+            console.log("new_save_loan   catch 2",error)
+            res.send({ status: 400, data: {}, message: error.message })
+        }
+    },
     async save_Tickers(req, res) {
         try {
             const symbols_response = await symbols.findAll()
@@ -247,4 +267,6 @@ module.exports =
             res.json({ status: 400, data: {}, message: error.message })
         }
     },
+
+    
 }
