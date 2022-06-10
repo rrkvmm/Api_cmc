@@ -8,6 +8,7 @@ var usersRouter = require('./routes/users');
 var symbolRouter = require('./routes/symbolRoutes');
 const winston = require('winston');
 const expressWinston = require('express-winston');
+var router = express.Router();
 var app = express();
 
 // view engine setup
