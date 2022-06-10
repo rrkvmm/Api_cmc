@@ -64,41 +64,24 @@ module.exports =
             // var arr = [apiresponse]
             await symbolTicker.update({ status: 0  }, { where: { trading_pairs : (message.baseAsset +"_"+message.quoteAsset)  }})
             const symbolsresponse = await symbolTicker.create({
-                trading_pairs            :   (message.baseAsset +"_"+message.quoteAsset),
-                last_price               :   apiresponse.last,
-                lowest_ask               :   apiresponse.low,
-                price_change_percent_24h :   apiresponse.rose,
-                high                     :   apiresponse.high,
-                buy                      :   apiresponse.buy,
-                sell                     :   apiresponse.sell,
-                time                     :   apiresponse.time,
-                open                     :   apiresponse.open,
-                status                   :   1,
+                trading_pairs             :   (message.baseAsset +"_"+message.quoteAsset),
+                base_currency             :   message.baseAsset ,
+                quote_currency            :   message.quoteAsset,
+                last_price                :   apiresponse.last,
+                lowest_ask                :   apiresponse.low,
+                price_change_percent_24h  :   apiresponse.rose,
+                base_volume               :   apiresponse.vol,
+                highest_bid               :   apiresponse.buy,
+                highest_price_24h         :   apiresponse.high,
+                lowest_price_24h          :   apiresponse.low,
+                status                    :   1,
             }).then(newUser => {
                 return  { status: 200, data: newUser, message: "Saved Successfully" }
             }).catch(error => {
                     console.log('Insertion OK, username:', error);
                     return { status: 400, data: {}, message: error.message }
             });
-            // let symbolsresponse = await symbolTicker.bulkCreate(arr,{ updateOnDuplicate: ["symbol", "high","last","low","buy","sell",
-            // "rose","time","open","status"],}).then((response) =>{
-            // console.log("response",response)
-            // return { status: 200, data:response, message: "Symbols Saved" } 
-            // }
-            // ).catch((error) => {
-            // console.log("response",error)
-            // return { status: 400, data:{}, message: error.message } 
-            // })
-
-            // let symbolsresponse = await symbolTicker.bulkCreate(arr,{ updateOnDuplicate: ["symbol", "high","last","low","buy","sell",
-            // "rose","time","open","status"],}).then((response) =>{
-            // console.log("response",response)
-            // return { status: 200, data:response, message: "Symbols Saved" } 
-            // }
-            // ).catch((error) => {
-            // console.log("response",error)
-            // return { status: 400, data:{}, message: error.message } 
-            // })
+      
             console.log("response",symbolsresponse)
             })
           res.json({ status: 200, data: {}, message: "Updated Successfully" })

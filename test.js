@@ -65,6 +65,9 @@ app.use(function(err, req, res, next) {
 app.get('/api/test', (req, res) => {
   res.json({'message': 'Hello winston!'});
 });
+router.get('/', function(req, res, next) {
+  res.render('index', { title: 'Testing Express' });
+});
 
 const port = 3000;
 app.listen(port, () => {
