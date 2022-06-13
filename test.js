@@ -77,7 +77,7 @@ cron.schedule('20 * * * * *', async () => {
   fs.appendFileSync('message.txt', 'running every 20s Started'+new Date()+"\n" );
 });
 
-const port = 3000;
+const port = 3007;
 app.listen(port, () => {
   console.log(`Example app listening at ${port}`);
 });
