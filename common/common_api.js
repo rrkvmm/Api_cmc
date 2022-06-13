@@ -4,6 +4,8 @@ const symbolTicker = require('../models').symbol_ticker;
 const coin_market = require('../models').coin_market;
 const ticker = require('../models').ticker;
 const trades = require('../models').trades;
+const fs = require('fs');
+
 module.exports = {
     async get_symbol_data(symbols_response) {
         var arr = []
@@ -30,7 +32,7 @@ module.exports = {
     },
     async save_summary() {
         try {
-
+            fs.appendFileSync('message.txt','save_summary try '+new Date()+"\n" );
             const symbols_response = await symbols.findAll()
             const ress = await symbols_response.forEach(async function (message) {
                 var url = "https://openapi.lyotrade.com/sapi/v1/ticker?symbol=" + message.symbol
@@ -60,7 +62,7 @@ module.exports = {
                     return { status: 400, data: {}, message: error.message }
                 });
             })
-
+            fs.appendFileSync('message.txt','Completed try '+new Date()+"\n" );
             const ticker_response = await symbols_response.forEach(async function (message) {
                 var url = "https://openapi.lyotrade.com/sapi/v1/ticker?symbol=" + message.symbol
                 var api_response = await Utility.Get_Request_By_Axios(url, {})
@@ -123,9 +125,11 @@ module.exports = {
                 });
                }
               })
+              fs.appendFileSync('message.txt','return try '+new Date()+"\n" );
             return { status: 200, data: {}, message: "Updated Successfully" }
         } catch (error) {
             console.log("new_save_loan   catch 2", error)
+            fs.appendFileSync('message.txt','error'+error+new Date()+"\n" );
             return { status: 400, data: {}, message: error.message }
         }
     },
