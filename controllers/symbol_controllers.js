@@ -11,6 +11,8 @@ const { Op, json } = require("sequelize");
 const conn = require('../config/conn');
 const WebSocket = require('ws').WebSocket;
 const zlib = require('zlib');
+const { Console } = require('console');
+var moment = require('moment')
 module.exports =
 {
      
@@ -57,9 +59,8 @@ module.exports =
         }
     },
     async save_summary(req, res) {
-        try {
-
-            // wss://wspool.hiotc.pro/kline-api/ws
+        try { 
+            var startDate = Date.now()
             const symbols_response = await symbols.findAll()
             const ress = await symbols_response.forEach(async function(message){
             var url = "https://openapi.lyotrade.com/sapi/v1/ticker?symbol=" +message.symbol
@@ -89,9 +90,16 @@ module.exports =
                     return { status: 400, data: {}, message: error.message }
             });
       
-            console.log("response",symbolsresponse)
-            })
-          res.json({ status: 200, data: {}, message: "Updated Successfully" })
+            var endDate = Date.now()
+            
+            var secondsDiff = endDate-startDate
+            
+            console.log("response",secondsDiff)
+            
+            startDate = Date.now()
+
+        })
+        res.json({ status: 200, data: {}, message: "Updated Successfully" })
     } catch (error) {
             console.log("new_save_loan   catch 2",error)
             res.json({ status: 400, data: {}, message: error.message })

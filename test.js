@@ -6,9 +6,10 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var symbolRouter = require('./routes/symbolRoutes');
+var common_api = require('./common/common_api');
 const winston = require('winston');
 const expressWinston = require('express-winston');
-
+var cron = require('node-cron');
 var app = express();
 
 // view engine setup
@@ -67,9 +68,17 @@ app.get('/api/test', (req, res) => {
   res.json({'message': 'Hello winston!'});
 });
 
+cron.schedule('20 * * * * *', async () => {
+  console.log('Starting ');
+  await common_api.save_summary()
+  // common_api.save_Tickers()
+  console.log('running every 20s ');
+});
 
 const port = 3000;
 app.listen(port, () => {
   console.log(`Example app listening at ${port}`);
 });
+
+
 module.exports = app;
