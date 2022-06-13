@@ -11,8 +11,7 @@ router.get('/get_asset' , symbolControllers.get_asset);
 router.get('/save_trades' , symbolControllers.save_Trades);
 router.get('/get_trades' , symbolControllers.get_trades);
 router.get('/get_order_book' , symbolControllers.get_order_book);
-
-// router.get('/get_coin_data' , symbolControllers.get_coin_data);
+router.get('/get_coin_data' , symbolControllers.get_coin_data);
 
 
 module.exports = router;

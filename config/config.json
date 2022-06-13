@@ -2,22 +2,22 @@
   "development": {
     "username": "postgres",
     "password": "123456",
-    "database": "Lyotrade_API_Sprint",
-    "host": "103.160.192.13",
+    "database": "OpenAPIServer",
+    "host": "103.160.192.14",
     "dialect": "postgres"
   },
   "test": {
     "username": "postgres",
     "password": "123456",
-    "database": "Lyotrade_API_Sprint",
-    "host": "103.160.192.13",
+    "database": "OpenAPIServer",
+    "host": "103.160.192.14",
     "dialect": "postgres"
   },
   "production": {
     "username": "postgres",
     "password": "123456",
-    "database": "Lyotrade_API_Sprint",
-    "host": "103.160.192.13",
+    "database": "OpenAPIServer",
+    "host": "103.160.192.14",
     "dialect": "postgres"
   }
 }
