@@ -3,6 +3,7 @@ const symbolTicker = require('../models').symbol_ticker;
 const symbol_ticker = require('../models').symbol_ticker;
 const coin_market = require('../models').coin_market;
 const ticker = require('../models').ticker;
+const trades = require('../models').trades;
 const Utility = require('../common/Utility');
 const commonapi = require('../common/common_api');
 const axios = require('axios');
@@ -267,6 +268,73 @@ module.exports =
             res.json({ status: 400, data: {}, message: error.message })
         }
     },
-
-    
+    async save_Trades(req, res) {
+        try {
+            const symbols_response = await symbols.findAll()
+            const ress = await symbols_response.forEach(async function(message){
+            var url = "https://openapi.lyotrade.com/sapi/v1/trades?symbol=" +message.symbol
+            var api_response =  await Utility.Get_Request_By_Axios(url,{})
+            let json_api_response = JSON.parse(api_response.data)
+            let apiresponse = json_api_response.data
+            // console.log(Object.keys(apiresponse).length)
+            // console.log(Object.keys(Object.keys(apiresponse)[0]))
+            let record = apiresponse.list[0]
+            if(record != null){
+            const symbolsresponse = await trades.create({
+                symbol                      :   (message.baseAsset +""+message.quoteAsset),
+                trade_id                    :   record.id,
+                base_volume                 :   record.qty,
+                quote_volume                :   (record.qty * record.price),
+                timestamp                   :   record.time,
+                type                        :   record.side,
+                price                       :   record.price,
+                status                      :   1,
+            }).then(newUser => {
+                return  { status: 200, data: newUser, message: "Saved Successfully" }
+            }).catch(error => {
+                    console.log('Insertion OK, username:', error);
+                    return { status: 400, data: {}, message: error.message }
+            });
+           }
+          })
+          res.json({ status: 200, data: {}, message: "Updated Successfully" })
+          
+    } catch (error) {
+            console.log("new_save_loan   catch 2",error)
+            res.send({ status: 400, data: {}, message: error.message })
+        }
+    },
+    async get_trades(req, res) {
+        try {
+            conn.pool.query('SELECT  json_object_agg(t2.symbol, (t1.*)) FROM symbols t2 LEFT JOIN  trades t1 ON      t2.symbol = lower(t1.symbol)', (error, results) => {
+                if (error) {
+                    console.log("error",error)
+                    // res.status(400).json("Data could not found")
+                    res.json({ status: 400, message: "Data could not found" ,data: {}})
+                }else{
+                    res.json({ status: 200, message: "Success" ,data: results.rows[0].json_object_agg})
+                    // res.status(200).json(results.rows[0].json_object_agg)
+                }
+               
+               
+              })
+          
+    } catch (error) {
+            console.log("get_trades   catch 2",error)
+            res.send({ status: 400, data: {}, message: error.message })
+        }
+    },
+    async get_order_book(req, res) {
+        try {
+            var symbol = req.query.symbol;
+            var query_par = "https://openapi.lyotrade.com/sapi/v1/depth?symbol="+symbol
+            var response = await Utility.Get_Request_By_Axios(query_par,{})
+            let json_response = JSON.parse(response.data)
+            json_response.data["timestamp"] = Date.now(); 
+            res.send(json_response.data)
+    } catch (error) {
+            console.log("get_trades   catch 2",error)
+            res.send({ status: 400, data: {}, message: error.message })
+        }
+    },
 }
