@@ -69,7 +69,7 @@ app.get('/api/test', (req, res) => {
   res.json({'message': 'Hello winston!'});
 });
 
-cron.schedule('20 * * * * *', async () => {
+cron.schedule('59 * * * * *', async () => {
   console.log('Starting ');
   fs.appendFileSync('message.txt', 'schedule Started'+new Date()+"\n" );
   await common_api.save_summary()

@@ -32,80 +32,19 @@ module.exports = {
     },
     async save_summary() {
         try {
-            fs.appendFileSync('message.txt','save_summary try '+new Date()+"\n" );
+           
+            fs.appendFileSync('message.txt','Fetching' + new Date() );
+            fs.appendFileSync('message.txt','Fetching the data try \n' );
             const symbols_response = await symbols.findAll()
-            const ress = await symbols_response.forEach(async function (message) {
-                var url = "https://openapi.lyotrade.com/sapi/v1/ticker?symbol=" + message.symbol
-                var api_response = await Utility.Get_Request_By_Axios(url, {})
-                let json_api_response = JSON.parse(api_response.data)
-                let apiresponse = json_api_response.data
-                apiresponse["symbol"] = message.symbol
-                apiresponse["status"] = 1
-                // var arr = [apiresponse]
-                await symbolTicker.update({ status: 0 }, { where: { trading_pairs: (message.baseAsset + "_" + message.quoteAsset) } })
-                const symbolsresponse = await symbolTicker.create({
-                    trading_pairs: (message.baseAsset + "_" + message.quoteAsset),
-                    base_currency: message.baseAsset,
-                    quote_currency: message.quoteAsset,
-                    last_price: apiresponse.last,
-                    lowest_ask: apiresponse.low,
-                    price_change_percent_24h: apiresponse.rose,
-                    base_volume: apiresponse.vol,
-                    highest_bid: apiresponse.buy,
-                    highest_price_24h: apiresponse.high,
-                    lowest_price_24h: apiresponse.low,
-                    status: 1,
-                }).then(newUser => {
-                    return { status: 200, data: newUser, message: "Saved Successfully" }
-                }).catch(error => {
-                    console.log('Insertion OK, username:', error);
-                    return { status: 400, data: {}, message: error.message }
-                });
-            })
-            fs.appendFileSync('message.txt','Completed try '+new Date()+"\n" );
-            const ticker_response = await symbols_response.forEach(async function (message) {
-                var url = "https://openapi.lyotrade.com/sapi/v1/ticker?symbol=" + message.symbol
-                var api_response = await Utility.Get_Request_By_Axios(url, {})
-                let json_api_response = JSON.parse(api_response.data)
-                let apiresponse = json_api_response.data
-                // apiresponse["symbol"] =  message.symbol
-                // apiresponse["status"] =  1
-                // var arr = [apiresponse]
-                await ticker.update({ status: 0 }, { where: { symbol: (message.baseAsset + "_" + message.quoteAsset) } })
-                // (message.baseAsset +"_"+message.quoteAsset),
-                const base_Asset_coin = await coin_market.findOne({ where: { symbol: message.baseAsset } })
-                console.log("base_Asset_coin", message.baseAsset + "_" + message.quoteAsset, base_Asset_coin)
-                const quote_Asset_coin = await coin_market.findOne({ where: { symbol: message.quoteAsset } })
-                console.log("quote_Asset_coin", message.baseAsset + "_" + message.quoteAsset, quote_Asset_coin)
-                if (base_Asset_coin != null && quote_Asset_coin != null) {
-                    const symbolsresponse = await ticker.create({
-                        symbol: (message.baseAsset + "_" + message.quoteAsset),
-                        base_id: base_Asset_coin.coin_id,
-                        quote_id: quote_Asset_coin.coin_id,
-                        last_price: apiresponse.last,
-                        base_volume: apiresponse.vol,
-                        quote_volume: (apiresponse.last * apiresponse.vol),
-                        isFrozen: 1,
-                        status: 1,
-
-                    }).then(newUser => {
-                        return { status: 200, data: newUser, message: "Saved Successfully" }
-                    }).catch(error => {
-                        console.log('Insertion OK, username:', error);
-                        return { status: 400, data: {}, message: error.message }
-                    });
-                }
-
-
-
-            })
-            const trades_response = await symbols_response.forEach(async function(message){
+            const ticker_response = symbols_response
+            const trades_response = symbols_response
+            fs.appendFileSync('message.txt','Started trades_response' + new Date() );
+        
+            const tradesresponse = await trades_response.forEach(async function(message){
                 var url = "https://openapi.lyotrade.com/sapi/v1/trades?symbol=" +message.symbol
                 var api_response =  await Utility.Get_Request_By_Axios(url,{})
                 let json_api_response = JSON.parse(api_response.data)
                 let apiresponse = json_api_response.data
-                // console.log(Object.keys(apiresponse).length)
-                // console.log(Object.keys(Object.keys(apiresponse)[0]))
                 let record = apiresponse.list[0]
                 if(record != null){
                 const symbolsresponse = await trades.create({
@@ -118,9 +57,13 @@ module.exports = {
                     price                       :   record.price,
                     status                      :   1,
                 }).then(newUser => {
+                    fs.appendFileSync('message.txt','Trades Saved' + new Date() );
+                    fs.appendFileSync('message.txt',JSON.stringify(newUser)+'\n' );
                     return  { status: 200, data: newUser, message: "Saved Successfully" }
                 }).catch(error => {
                         console.log('Insertion OK, username:', error);
+                        fs.appendFileSync('message.txt','Trades Error' + new Date() );
+                        fs.appendFileSync('message.txt',JSON.stringify(error)+'\n' );
                         return { status: 400, data: {}, message: error.message }
                 });
                }
