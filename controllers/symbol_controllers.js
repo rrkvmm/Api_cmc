@@ -131,9 +131,9 @@ module.exports =
             console.log("queryObject",queryObject)
             console.log("queryObject",queryObject.symbol)
             console.log("queryObject",Object.keys(queryObject).indexOf("symbol"))
-            var sql_query = 'SELECT  json_object_agg(t1.symbol, (t1.* ))   FROM tickers t1  WHERE t1.status = 1'
+            var sql_query = 'SELECT  json_object_agg(t1.symbol, (t1.* ))   FROM tickers t1  '
             if(queryObject == undefined){
-                sql_query = 'SELECT  json_object_agg(t1.symbol, (t1.* ))   FROM tickers t1  WHERE t1.status = 1'
+                sql_query = 'SELECT  json_object_agg(t1.symbol, (t1.* ))   FROM tickers t1  '
             }
             else if(Object.keys(queryObject).indexOf("symbol") != -1 ){
                  if(queryObject.symbol == "")
