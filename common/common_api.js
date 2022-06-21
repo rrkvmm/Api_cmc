@@ -131,7 +131,7 @@ module.exports = {
                 console.log("base_Asset_coin", message.baseAsset + "_" + message.quoteAsset, base_Asset_coin)
                 const quote_Asset_coin = await coin_market.findOne({ where: { symbol: message.quoteAsset } })
                 console.log("quote_Asset_coin", message.baseAsset + "_" + message.quoteAsset, quote_Asset_coin)
-                await ticker.destroy( { where: { symbol: (message.baseAsset + "" + message.quoteAsset) } })
+                await ticker.destroy( { where: { symbol: (message.baseAsset + "_" + message.quoteAsset) } })
                 if (base_Asset_coin != null && quote_Asset_coin != null) {
                     const symbolsresponse = await ticker.create({
                         symbol: (message.baseAsset + "_" + message.quoteAsset),
