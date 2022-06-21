@@ -13,6 +13,7 @@ const WebSocket = require('ws').WebSocket;
 const zlib = require('zlib');
 const { Console } = require('console');
 var moment = require('moment')
+const url = require('url');
 module.exports =
 {
      
@@ -126,10 +127,21 @@ module.exports =
     },
     async get_tickers(req, res) {
         try {
-            conn.pool.query('SELECT  json_object_agg(t1.symbol, (t1.* ))   FROM tickers t1  WHERE t1.status = 1', (error, results) => {
+            const queryObject = url.parse(req.url, true).query;
+            console.log("queryObject",queryObject)
+            console.log("queryObject",queryObject.symbol)
+            console.log("queryObject",Object.keys(queryObject).indexOf("symbol"))
+            var sql_query = 'SELECT  json_object_agg(t1.symbol, (t1.* ))   FROM tickers t1  WHERE t1.status = 1'
+            if(queryObject == undefined){
+                sql_query = 'SELECT  json_object_agg(t1.symbol, (t1.* ))   FROM tickers t1  WHERE t1.status = 1'
+            }
+            else if(Object.keys(queryObject).indexOf("symbol") != -1 ){
+                sql_query = 'SELECT  json_object_agg(t1.symbol, (t1.* ))   FROM tickers t1  WHERE t1.status = 1'
+            }
+
+            conn.pool.query(sql_query, (error, results) => {
                 if (error) {
                     console.log("error",error)
-                    // res.status(400).json("Data could not found")
                     res.json({ status: 400, message: "Data could not found" ,data: {}})
                 }else{
                     res.json({ status: 200, message: "Success" ,data: results.rows[0].json_object_agg})
@@ -172,11 +184,9 @@ module.exports =
             var api_response =  await Utility.Get_Request_By_Axios(url,{})
             let json_api_response = JSON.parse(api_response.data)
             let apiresponse = json_api_response.data
-            // apiresponse["symbol"] =  message.symbol
-            // apiresponse["status"] =  1
-            // var arr = [apiresponse]
-            await ticker.update({ status: 0  }, { where: { symbol :  (message.baseAsset +"_"+message.quoteAsset)  }})
-            // (message.baseAsset +"_"+message.quoteAsset),
+           
+            await ticker.delete({ where: { symbol :  (message.baseAsset +"_"+message.quoteAsset)  }})
+          
             const base_Asset_coin = await coin_market.findOne({ where: { symbol : message.baseAsset }})
             console.log("base_Asset_coin",message.baseAsset +"_"+message.quoteAsset,base_Asset_coin)
             const quote_Asset_coin = await coin_market.findOne({ where: { symbol : message.quoteAsset }})
@@ -191,7 +201,6 @@ module.exports =
                 quote_volume                :   (apiresponse.last * apiresponse.vol),
                 isFrozen                    :   1,
                 status                      :   1,
-               
             }).then(newUser => {
                 return  { status: 200, data: newUser, message: "Saved Successfully" }
             }).catch(error => {
