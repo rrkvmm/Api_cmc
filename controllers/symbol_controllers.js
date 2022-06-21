@@ -136,13 +136,18 @@ module.exports =
                 sql_query = 'SELECT  json_object_agg(t1.symbol, (t1.* ))   FROM tickers t1  WHERE t1.status = 1'
             }
             else if(Object.keys(queryObject).indexOf("symbol") != -1 ){
-                sql_query = 'SELECT  json_object_agg(t1.symbol, (t1.* ))   FROM tickers t1  WHERE t1.status = 1'
+                 if(queryObject.symbol == "")
+                 {
+                    return res.json({ status: 400, message: "Invalid symbol" ,data: null})
+                 }
+
+                sql_query = "SELECT  json_object_agg(t1.symbol, (t1.* ))   FROM tickers t1  WHERE t1.symbol ='"+queryObject.symbol+"'"
             }
 
             conn.pool.query(sql_query, (error, results) => {
                 if (error) {
                     console.log("error",error)
-                    res.json({ status: 400, message: "Data could not found" ,data: {}})
+                    res.json({ status: 400, message: "Data could not found" ,data:sql_query})
                 }else{
                     res.json({ status: 200, message: "Success" ,data: results.rows[0].json_object_agg})
                     // res.status(200).json(results.rows[0].json_object_agg)
