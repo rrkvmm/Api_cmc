@@ -44,7 +44,8 @@ module.exports = {
                 apiresponse["symbol"] = message.symbol
                 apiresponse["status"] = 1
                 // var arr = [apiresponse]
-                await symbolTicker.update({ status: 0 }, { where: { trading_pairs: (message.baseAsset + "_" + message.quoteAsset) } })
+                // await symbolTicker.update({ status: 0 }, { where: { trading_pairs: (message.baseAsset + "_" + message.quoteAsset) } })
+                await symbolTicker.destroy( { where: { trading_pairs: (message.baseAsset + "_" + message.quoteAsset) } })
                 const symbolsresponse = await symbolTicker.create({
                     trading_pairs: (message.baseAsset + "_" + message.quoteAsset),
                     base_currency: message.baseAsset,
@@ -85,6 +86,7 @@ module.exports = {
                 let apiresponse = json_api_response.data
                 let record = apiresponse.list[0]
                 if (record != null) {
+                    await trades.destroy( { where: { symbol: (message.baseAsset + "" + message.quoteAsset) } })
                     const symbolsresponse = await trades.create({
                         symbol: (message.baseAsset + "" + message.quoteAsset),
                         trade_id: record.id,
@@ -129,6 +131,7 @@ module.exports = {
                 console.log("base_Asset_coin", message.baseAsset + "_" + message.quoteAsset, base_Asset_coin)
                 const quote_Asset_coin = await coin_market.findOne({ where: { symbol: message.quoteAsset } })
                 console.log("quote_Asset_coin", message.baseAsset + "_" + message.quoteAsset, quote_Asset_coin)
+                await ticker.destroy( { where: { symbol: (message.baseAsset + "_" + message.quoteAsset) } })
                 if (base_Asset_coin != null && quote_Asset_coin != null) {
                     const symbolsresponse = await ticker.create({
                         symbol: (message.baseAsset + "_" + message.quoteAsset),
