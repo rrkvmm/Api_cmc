@@ -107,7 +107,7 @@ module.exports =
     },
     async get_summary(req, res) {
         try {
-            conn.pool.query('SELECT  json_object_agg(t1.trading_pairs, (t1.* ))   FROM symbol_tickers t1  ', (error, results) => {
+            conn.pool.query('SELECT  json_object_agg(t1.trading_pairs, (t1.* ))   FROM symbol_tickers t1  GROUP BY t1.trading_pairs ', (error, results) => {
                 if (error) {
                     // res.status(400).json("Data could not found")
                     res.json({ status: 400, message: "Data could not found", data: {} })
@@ -130,9 +130,9 @@ module.exports =
             console.log("queryObject",queryObject)
             console.log("queryObject",queryObject.symbol)
             console.log("queryObject",Object.keys(queryObject).indexOf("symbol"))
-            var sql_query = 'SELECT  json_object_agg(t1.symbol, (t1.* ))   FROM tickers t1  '
+            var sql_query = 'SELECT  json_object_agg(t1.symbol, (t1.* ))   FROM tickers t1 GROUP BY t1.symbol  '
             if(queryObject == undefined){
-                sql_query = 'SELECT  json_object_agg(t1.symbol, (t1.* ))   FROM tickers t1  '
+                sql_query = 'SELECT  json_object_agg(t1.symbol, (t1.* ))   FROM tickers t1  GROUP BY t1.symbol  '
             }
             else if(Object.keys(queryObject).indexOf("symbol") != -1 ){
                  if(queryObject.symbol == "")
@@ -330,7 +330,7 @@ module.exports =
     },
     async get_trades(req, res) {
         try {
-            conn.pool.query('SELECT  json_object_agg(t2.symbol, (t1.*)) FROM symbols t2 LEFT JOIN  trades t1 ON      t2.symbol = lower(t1.symbol)', (error, results) => {
+            conn.pool.query('SELECT  json_object_agg(t2.symbol, (t1.*)) FROM symbols t2 LEFT JOIN  trades t1 ON      t2.symbol = lower(t1.symbol) ', (error, results) => {
                 if (error) {
                     console.log("error", error)
                     // res.status(400).json("Data could not found")
