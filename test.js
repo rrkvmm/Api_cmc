@@ -101,7 +101,7 @@ cron.schedule('10 * * * * *', async () => {
 
       job_flag = 0;
       job_status = 0;
-
+     
     }
     else if (job_status == 3) {
 
