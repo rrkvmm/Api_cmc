@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     
-    "start": "node --max-old-space-size=8192 test.js" 
+    "start": "node --max-old-space-size=8192 app.js" 
   
   },
   "dependencies": {
