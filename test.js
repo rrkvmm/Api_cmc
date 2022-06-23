@@ -76,7 +76,7 @@ app.get('/api/test', (req, res) => {
 
 var job_status = 0
 var job_flag = 0
-cron.schedule('60 * * * * *', async () => {
+cron.schedule('59 * * * * *', async () => {
  
     timer = Date.now()
     console.log("==================job_status==============",job_status)
