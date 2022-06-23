@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('../test');
+var app = require('../mongo_db');
 var debug = require('debug')('api-cmc:server');
 var http = require('http');
 

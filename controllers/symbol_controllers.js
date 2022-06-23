@@ -43,7 +43,6 @@ module.exports =
             let json_response = JSON.parse(response.data)
             let symbols_response = await symbols.bulkCreate(json_response.data.symbols,{ 
                 updateOnDuplicate: ["symbol", "quantityPrecision", "pricePrecision", "baseAsset", "quoteAsset"],
-                
             })
             .then((response) =>
             res.json({ status: 200, data:response, message: "Symbols Saved" })
@@ -62,7 +61,8 @@ module.exports =
         try { 
             var startDate = Date.now()
             const symbols_response = await symbols.findAll()
-            const ress = await symbols_response.forEach(async function(message){
+            const ress = await symbols_response.forEach(async function(message)
+            {
             var url = "https://openapi.lyotrade.com/sapi/v1/ticker?symbol=" +message.symbol
             var api_response =  await Utility.Get_Request_By_Axios(url,{})
             let json_api_response = JSON.parse(api_response.data)
@@ -284,8 +284,6 @@ module.exports =
             var api_response =  await Utility.Get_Request_By_Axios(url,{})
             let json_api_response = JSON.parse(api_response.data)
             let apiresponse = json_api_response.data
-            // console.log(Object.keys(apiresponse).length)
-            // console.log(Object.keys(Object.keys(apiresponse)[0]))
             let record = apiresponse.list[0]
             if(record != null){
             const symbolsresponse = await trades.create({
@@ -317,11 +315,11 @@ module.exports =
             conn.pool.query('SELECT  json_object_agg(t2.symbol, (t1.*)) FROM symbols t2 LEFT JOIN  trades t1 ON      t2.symbol = lower(t1.symbol)', (error, results) => {
                 if (error) {
                     console.log("error",error)
-                    // res.status(400).json("Data could not found")
+                  
                     res.json({ status: 400, message: "Data could not found" ,data: {}})
                 }else{
                     res.json({ status: 200, message: "Success" ,data: results.rows[0].json_object_agg})
-                    // res.status(200).json(results.rows[0].json_object_agg)
+                    
                 }
                
                
