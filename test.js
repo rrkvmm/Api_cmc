@@ -6,7 +6,10 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var symbolRouter = require('./routes/symbolRoutes');
+var mongoRoute = require('./routes/mongoRoute');
+require('dotenv').config()
 var common_api = require('./common/common_api');
+var constant = require('./common/constant');
 const winston = require('winston');
 const expressWinston = require('express-winston');
 var cron = require('node-cron');
@@ -48,7 +51,8 @@ app.use(expressWinston.logger({
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/symbol', symbolRouter);
+// app.use('/symbol', symbolRouter);
+app.use('/symbol', mongoRoute);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -70,44 +74,45 @@ app.get('/api/test', (req, res) => {
   res.json({ 'message': 'Hello winston!' });
 });
 
-var timer = ""
+var job_status = 0
+var job_flag = 0
 cron.schedule('10 * * * * *', async () => {
-
-
-  if (job_flag == 0) {
+ 
     timer = Date.now()
-
+    console.log("==================job_status==============",job_status)
     if (job_status == 0) {
-
-      let data = await common_api.save_data_summary()
-      job_flag = 0;
+    
+      let data = await common_api.save_summary_in_mongo_with_json()
       job_status = 1;
-
+      console.log("==================save_data_summary==============")
+      console.log("==================save_data_summary==============",data)
+      console.log("==================job_status==============",job_status)
     }
 
     else if (job_status == 1) {
-
-
-      job_flag = 1;
-      let trades = await common_api.save_data_trades()
-
-      job_flag = 0;
+      console.log("==================job_status==============",job_status)
+      let trades = await common_api.save_Trades_in_mongo_with_json()
+      console.log("==================save_data_ticker==============",trades)
       job_status = 2;
-
+      console.log("==================job_status==============",job_status)
     }
     else if (job_status == 2) {
-      job_flag = 1;
-      let ticker = await common_api.save_data_ticker()
-
-      job_flag = 0;
-      job_status = 0;
+      console.log("==================job_status==============",job_status)
      
+      constant.fetch_traders_data =  constant.traders_Data
+      constant.fetch_tickers_Data =  constant.tickers_Data
+      constant.fetch_Summary_Data =  constant.Summary_Data
+      console.log("==================save_data_ticker==============")
+      
+   
+      job_status = 0;
+      console.log("==================job_status==============",job_status)
     }
     else if (job_status == 3) {
 
     }
     else if (job_status == 4) {
-    }
+
   }
 });
 
