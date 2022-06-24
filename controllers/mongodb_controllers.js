@@ -444,12 +444,12 @@ module.exports =
         try {
             MongoClient.connect(process.env.MONGO_URL, function (err, db) {
                 if (err) {
-                    res.send({ status: 400, data: {}, message: err })
+                    res.send({ status: 400, data: {}, message: "error" })
                 }
                 else {
                     var dbo = db.db(process.env.DB_Name);
                     dbo.collection("symbol").find({}).toArray(function (err, result) {
-                        if (err) { res.send({ status: 401, data: {}, message: err }) }
+                        if (err) { res.send({ status: 401, data: {}, message: "error" }) }
 
                         
                         res.send({ status: 200, data: result, message: "success" })
