@@ -6,6 +6,8 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var symbolRouter = require('./routes/symbolRoutes');
+var mongoRoute = require('./routes/mongoRoute');
+require('dotenv').config()
 var common_api = require('./common/common_api');
 const winston = require('winston');
 const expressWinston = require('express-winston');
@@ -49,6 +51,7 @@ app.use(expressWinston.logger({
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/symbol', symbolRouter);
+app.use('/mongo', mongoRoute);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -71,14 +74,16 @@ app.get('/api/test', (req, res) => {
 });
 
 var timer = ""
+var fetch_status = ""
+var store_status = ""
+var api_serve    = ""
 cron.schedule('10 * * * * *', async () => {
-
 
   if (job_flag == 0) {
     timer = Date.now()
 
     if (job_status == 0) {
-
+      fetch_status = 1
       let data = await common_api.save_data_summary()
       job_flag = 0;
       job_status = 1;
@@ -111,7 +116,11 @@ cron.schedule('10 * * * * *', async () => {
   }
 });
 
-const port = 5000;
+<<<<<<< HEAD:cga_api_app.js
+const port = 5002;
+=======
+const port = 5003;
+>>>>>>> 8ab0c4d826326a29b47300587bb6b4050cab6d29:old app.js
 app.listen(port, () => {
   console.log(`Example app listening at ${port}`);
 });
