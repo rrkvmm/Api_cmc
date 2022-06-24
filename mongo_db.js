@@ -76,7 +76,7 @@ app.get('/api/test', (req, res) => {
 
 var job_status = 0
 var job_flag = 0
-cron.schedule('59 * * * * *', async () => {
+cron.schedule('10 * * * * *', async () => {
  
     timer = Date.now()
     console.log("==================job_status==============",job_status)
@@ -116,7 +116,7 @@ cron.schedule('59 * * * * *', async () => {
   }
 });
 
-const port = 3000;
+const port = 5003;
 app.listen(port, () => {
   console.log(`Example app listening at ${port}`);
 });
