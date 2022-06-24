@@ -108,7 +108,7 @@ module.exports =
     },
     async get_summary(req, res) {
         try {
-            conn.pool.query('SELECT  json_object_agg(t1.trading_pairs, (t1.* ))   FROM symbol_tickers t1  WHERE t1.status = 1', (error, results) => {
+            conn.pool.query('SELECT  json_object_agg(t1.trading_pairs, (t1.* ))   FROM symbol_tickers t1  ', (error, results) => {
                 if (error) {
                     // res.status(400).json("Data could not found")
                     res.json({ status: 400, message: "Data could not found" ,data: {}})
