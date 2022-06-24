@@ -9,9 +9,9 @@ router.get('/save_tickers'       ,       mongodb_controllers.save_tickers_in_mon
 
 
 
-router.get('/get_summary' , mongodb_controllers.get_summary_with_json);
+router.get('/getsummary' , mongodb_controllers.get_summary_with_json);
 router.get('/get_tickers' , mongodb_controllers.get_tickers_with_json);
-router.get('/get_traders' , mongodb_controllers.get_traders_with_json);
+router.get('/get_trades' , mongodb_controllers.get_traders_with_json);
 router.get('/get_asset'   , mongodb_controllers.get_asset);
 router.get('/get_order_book'   , mongodb_controllers.get_order_book);
 
