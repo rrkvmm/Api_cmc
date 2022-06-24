@@ -116,11 +116,7 @@ cron.schedule('10 * * * * *', async () => {
   }
 });
 
-<<<<<<< HEAD:cga_api_app.js
 const port = 5002;
-=======
-const port = 5003;
->>>>>>> 8ab0c4d826326a29b47300587bb6b4050cab6d29:old app.js
 app.listen(port, () => {
   console.log(`Example app listening at ${port}`);
 });

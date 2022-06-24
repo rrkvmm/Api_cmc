@@ -16,50 +16,50 @@ var moment = require('moment')
 const url = require('url');
 module.exports =
 {
-     
+
     async save_symbols(req, res) {
         try {
-            var response = await Utility.Get_Request_By_Axios("https://openapi.lyotrade.com/sapi/v1/symbols",{})
+            var response = await Utility.Get_Request_By_Axios("https://openapi.lyotrade.com/sapi/v1/symbols", {})
             let json_response = JSON.parse(response.data)
-            let symbols_response = await symbols.bulkCreate(json_response.data.symbols,{ 
+            let symbols_response = await symbols.bulkCreate(json_response.data.symbols, {
                 updateOnDuplicate: ["symbol", "quantityPrecision", "pricePrecision", "baseAsset", "quoteAsset"],
-                
+
             })
-            .then((response) =>
-            res.json({ status: 200, data:response, message: "Symbols Saved" })
-            )
-            .catch((error) => 
-            
-            res.json({ status: 400, data:{}, message:error.message })
-            )
-           
+                .then((response) =>
+                    res.json({ status: 200, data: response, message: "Symbols Saved" })
+                )
+                .catch((error) =>
+
+                    res.json({ status: 400, data: {}, message: error.message })
+                )
+
         } catch (error) {
-            console.log("new_save_loan   catch 2",error)
+            console.log("new_save_loan   catch 2", error)
             res.json({ status: 400, data: {}, message: error.message })
         }
     },
     async get_symbols(req, res) {
         try {
-            var response = await Utility.Get_Request_By_Axios("https://openapi.lyotrade.com/sapi/v1/symbols",{})
+            var response = await Utility.Get_Request_By_Axios("https://openapi.lyotrade.com/sapi/v1/symbols", {})
             let json_response = JSON.parse(response.data)
-            let symbols_response = await symbols.bulkCreate(json_response.data.symbols,{ 
+            let symbols_response = await symbols.bulkCreate(json_response.data.symbols, {
                 updateOnDuplicate: ["symbol", "quantityPrecision", "pricePrecision", "baseAsset", "quoteAsset"],
             })
-            .then((response) =>
-            res.json({ status: 200, data:response, message: "Symbols Saved" })
-            )
-            .catch((error) => 
-            
-            res.json({ status: 400, data:{}, message:error.message })
-            )
-           
+                .then((response) =>
+                    res.json({ status: 200, data: response, message: "Symbols Saved" })
+                )
+                .catch((error) =>
+
+                    res.json({ status: 400, data: {}, message: error.message })
+                )
+
         } catch (error) {
-            console.log("new_save_loan   catch 2",error)
+            console.log("new_save_loan   catch 2", error)
             res.json({ status: 400, data: {}, message: error.message })
         }
     },
     async save_summary(req, res) {
-        try { 
+        try {
             var startDate = Date.now()
             const symbols_response = await symbols.findAll()
             const ress = await symbols_response.forEach(async function(message)
@@ -89,39 +89,39 @@ module.exports =
             }).catch(error => {
                     console.log('Insertion OK, username:', error);
                     return { status: 400, data: {}, message: error.message }
-            });
-      
-            var endDate = Date.now()
-            
-            var secondsDiff = endDate-startDate
-            
-            console.log("response",secondsDiff)
-            
-            startDate = Date.now()
+                });
 
-        })
-        res.json({ status: 200, data: {}, message: "Updated Successfully" })
-    } catch (error) {
-            console.log("new_save_loan   catch 2",error)
+                var endDate = Date.now()
+
+                var secondsDiff = endDate - startDate
+
+                console.log("response", secondsDiff)
+
+                startDate = Date.now()
+
+            })
+            res.json({ status: 200, data: {}, message: "Updated Successfully" })
+        } catch (error) {
+            console.log("new_save_loan   catch 2", error)
             res.json({ status: 400, data: {}, message: error.message })
         }
     },
     async get_summary(req, res) {
         try {
-            conn.pool.query('SELECT  json_object_agg(t1.trading_pairs, (t1.* ))   FROM symbol_tickers t1  ', (error, results) => {
+            conn.pool.query('SELECT  json_object_agg(t1.trading_pairs, (t1.* ))   FROM symbol_tickers t1  GROUP BY t1.trading_pairs ', (error, results) => {
                 if (error) {
                     // res.status(400).json("Data could not found")
-                    res.json({ status: 400, message: "Data could not found" ,data: {}})
-                }else{
-                    res.json({ status: 200, message: "Success" ,data: results.rows[0].json_object_agg})
+                    res.json({ status: 400, message: "Data could not found", data: {} })
+                } else {
+                    res.json({ status: 200, message: "Success", data: results.rows[0].json_object_agg })
                     // res.status(200).json(results.rows[0].json_object_agg)
                 }
-               
-               
-              })
-          
-    } catch (error) {
-            console.log("new_save_loan   catch 2",error)
+
+
+            })
+
+        } catch (error) {
+            console.log("new_save_loan   catch 2", error)
             res.send({ status: 400, data: {}, message: error.message })
         }
     },
@@ -131,9 +131,9 @@ module.exports =
             console.log("queryObject",queryObject)
             console.log("queryObject",queryObject.symbol)
             console.log("queryObject",Object.keys(queryObject).indexOf("symbol"))
-            var sql_query = 'SELECT  json_object_agg(t1.symbol, (t1.* ))   FROM tickers t1  '
+            var sql_query = 'SELECT  json_object_agg(t1.symbol, (t1.* ))   FROM tickers t1 GROUP BY t1.symbol  '
             if(queryObject == undefined){
-                sql_query = 'SELECT  json_object_agg(t1.symbol, (t1.* ))   FROM tickers t1  '
+                sql_query = 'SELECT  json_object_agg(t1.symbol, (t1.* ))   FROM tickers t1  GROUP BY t1.symbol  '
             }
             else if(Object.keys(queryObject).indexOf("symbol") != -1 ){
                  if(queryObject.symbol == "")
@@ -155,9 +155,9 @@ module.exports =
                
                
               })
-          
-    } catch (error) {
-            console.log("new_save_loan   catch 2",error)
+
+        } catch (error) {
+            console.log("new_save_loan   catch 2", error)
             res.send({ status: 400, data: {}, message: error.message })
         }
     },
@@ -165,19 +165,19 @@ module.exports =
         try {
             conn.pool.query('SELECT  json_object_agg(t1.symbol, (t1.* ))   FROM symbols t1', (error, results) => {
                 if (error) {
-                    console.log("error",error)
+                    console.log("error", error)
                     // res.status(400).json("Data could not found")
-                    res.json({ status: 400, message: "Data could not found" ,data: {}})
-                }else{
-                    res.json({ status: 200, message: "Success" ,data: results.rows[0].json_object_agg})
+                    res.json({ status: 400, message: "Data could not found", data: {} })
+                } else {
+                    res.json({ status: 200, message: "Success", data: results.rows[0].json_object_agg })
                     // res.status(200).json(results.rows[0].json_object_agg)
                 }
-               
-               
-              })
-          
-    } catch (error) {
-            console.log("new_save_loan   catch 2",error)
+
+
+            })
+
+        } catch (error) {
+            console.log("new_save_loan   catch 2", error)
             res.send({ status: 400, data: {}, message: error.message })
         }
     },
@@ -218,10 +218,10 @@ module.exports =
       
            
             })
-          res.json({ status: 200, data: {}, message: "Updated Successfully" })
-          
-    } catch (error) {
-            console.log("new_save_loan   catch 2",error)
+            res.json({ status: 200, data: {}, message: "Updated Successfully" })
+
+        } catch (error) {
+            console.log("new_save_loan   catch 2", error)
             res.send({ status: 400, data: {}, message: error.message })
         }
     },
@@ -229,30 +229,30 @@ module.exports =
         try {
             const symbols_response = await symbols.findAll()
             const ws = new WebSocket('wss://wspool.hiotc.pro/kline-api/ws');
-            
-            ws.on('open', function open() { 
+
+            ws.on('open', function open() {
                 let sendData = JSON.stringify({
-                    "event":"sub",
-                    "params":{
-                        "channel":"market_btcusdt_ticker", // $symbol E.g. btcusdt 
-                        "cb_id":"1" // Business ID is not required
-                        }
+                    "event": "sub",
+                    "params": {
+                        "channel": "market_btcusdt_ticker", // $symbol E.g. btcusdt 
+                        "cb_id": "1" // Business ID is not required
+                    }
                 });
-              ws.send(sendData);
+                ws.send(sendData);
             });
             ws.on('message', function message(data) {
                 zlib.unzip(data, (err, buffer) => {
                     if (err) {
-                      console.error('An error occurred:', err);
-                      process.exitCode = 1;
+                        console.error('An error occurred:', err);
+                        process.exitCode = 1;
                     }
                     console.log(buffer.toString());
                     // res.json({ status: 200, data: buffer.toString(), message: "" })
-                  });
-              });
-     
-    } catch (error) {
-            console.log("new_save_loan   catch 2",error)
+                });
+            });
+
+        } catch (error) {
+            console.log("new_save_loan   catch 2", error)
             res.json({ status: 400, data: {}, message: error.message })
         }
     },
@@ -261,32 +261,32 @@ module.exports =
 
             // wss://wspool.hiotc.pro/kline-api/ws
             // const symbols_response = await symbols.findAll()
-            var url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/map?CMC_PRO_API_KEY=UNIFIED-CRYPTOASSET-INDEX&listing_status=active" 
-            var api_response =  await Utility.Get_Request_By_Axios(url,{})
+            var url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/map?CMC_PRO_API_KEY=UNIFIED-CRYPTOASSET-INDEX&listing_status=active"
+            var api_response = await Utility.Get_Request_By_Axios(url, {})
             let json_api_response = JSON.parse(api_response.data)
             let apiresponse = json_api_response.data
-            const ress = await apiresponse.data.forEach(async function(message){
-                     console.log("message",message)
-   
-                     const symbolsresponse = await coin_market.create({
-                        coin_id                   :   message.id ,
-                        name                      :   message.name ,
-                        symbol                    :   message.symbol,
-                        slug                      :   message.slug,
-                      
-                    }).then(newUser => {
-                        console.log("message",newUser)
-                        return  { status: 200, data: newUser, message: "Saved Successfully" }
-                    }).catch(error => {
-                        console.log("message",error)
-                            console.log('Insertion OK, username:', error);
-                            return { status: 400, data: {}, message: error.message }
-                    });
-              
+            const ress = await apiresponse.data.forEach(async function (message) {
+                console.log("message", message)
+
+                const symbolsresponse = await coin_market.create({
+                    coin_id: message.id,
+                    name: message.name,
+                    symbol: message.symbol,
+                    slug: message.slug,
+
+                }).then(newUser => {
+                    console.log("message", newUser)
+                    return { status: 200, data: newUser, message: "Saved Successfully" }
+                }).catch(error => {
+                    console.log("message", error)
+                    console.log('Insertion OK, username:', error);
+                    return { status: 400, data: {}, message: error.message }
+                });
+
             })
-           res.json({ status: 200, data: apiresponse, message: "Updated Successfully" })
-    } catch (error) {
-            console.log("new_save_loan   catch 2",error)
+            res.json({ status: 200, data: apiresponse, message: "Updated Successfully" })
+        } catch (error) {
+            console.log("new_save_loan   catch 2", error)
             res.json({ status: 400, data: {}, message: error.message })
         }
     },
@@ -326,7 +326,7 @@ module.exports =
     },
     async get_trades(req, res) {
         try {
-            conn.pool.query('SELECT  json_object_agg(t2.symbol, (t1.*)) FROM symbols t2 LEFT JOIN  trades t1 ON      t2.symbol = lower(t1.symbol)', (error, results) => {
+            conn.pool.query('SELECT  json_object_agg(t2.symbol, (t1.*)) FROM symbols t2 LEFT JOIN  trades t1 ON      t2.symbol = lower(t1.symbol) ', (error, results) => {
                 if (error) {
                     console.log("error",error)
                   
@@ -335,25 +335,25 @@ module.exports =
                     res.json({ status: 200, message: "Success" ,data: results.rows[0].json_object_agg})
                     
                 }
-               
-               
-              })
-          
-    } catch (error) {
-            console.log("get_trades   catch 2",error)
+
+
+            })
+
+        } catch (error) {
+            console.log("get_trades   catch 2", error)
             res.send({ status: 400, data: {}, message: error.message })
         }
     },
     async get_order_book(req, res) {
         try {
             var symbol = req.query.symbol;
-            var query_par = "https://openapi.lyotrade.com/sapi/v1/depth?symbol="+symbol
-            var response = await Utility.Get_Request_By_Axios(query_par,{})
+            var query_par = "https://openapi.lyotrade.com/sapi/v1/depth?symbol=" + symbol
+            var response = await Utility.Get_Request_By_Axios(query_par, {})
             let json_response = JSON.parse(response.data)
-            json_response.data["timestamp"] = Date.now(); 
+            json_response.data["timestamp"] = Date.now();
             res.send(json_response.data)
-    } catch (error) {
-            console.log("get_trades   catch 2",error)
+        } catch (error) {
+            console.log("get_trades   catch 2", error)
             res.send({ status: 400, data: {}, message: error.message })
         }
     },

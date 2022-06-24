@@ -4,7 +4,10 @@
  * Module dependencies.
  */
 
-var app = require('../cga_api_app');
+
+
+var app = require('../app');
+
 var debug = require('debug')('api-cmc:server');
 var http = require('http');
 
