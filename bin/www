@@ -4,11 +4,10 @@
  * Module dependencies.
  */
 
-<<<<<<< HEAD
-var app = require('../cga_api_app');
-=======
-var app = require('../mongo_db');
->>>>>>> 8ab0c4d826326a29b47300587bb6b4050cab6d29
+
+
+var app = require('../app');
+
 var debug = require('debug')('api-cmc:server');
 var http = require('http');
 
